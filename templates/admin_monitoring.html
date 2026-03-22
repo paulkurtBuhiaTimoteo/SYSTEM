@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Inventory | ISSUE REPORTING</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<main class="page">
+  <section class="card" style="width:min(1200px,100%);">
+
+    <div class="brand" style="justify-content:space-between; text-align:left;">
+      <div style="display:flex; gap:14px; align-items:center;">
+        <div class="logo">CCIT</div>
+        <div>
+          <h1>EQUIPMENT INVENTORY</h1>
+          <p>Admin only • Add / Update / Monitor equipment</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a class="link" href="/admin/dashboard" style="font-weight:700;">Back to Issues</a>
+        <a class="link" href="/logout" style="font-weight:700;">Logout</a>
+      </div>
+    </div>
+
+    <!-- FLASH -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom:12px;">
+          {% for category, message in messages %}
+            <div style="
+              padding:10px 12px;
+              border-radius:12px;
+              border:1px solid rgba(255,255,255,0.12);
+              background: rgba(255,255,255,0.08);
+              color: rgba(234,240,255,0.95);
+              font-size: 13px;
+              margin-bottom: 8px;
+              text-align:center;
+            ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- COUNTERS -->
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+      <div style="flex:1; min-width:180px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05);">
+        <div style="font-size:12px; color:rgba(234,240,255,0.72);">Total Equipment</div>
+        <div style="font-size:22px; font-weight:800;">{{ total_eq }}</div>
+      </div>
+      <div style="flex:1; min-width:180px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05);">
+        <div style="font-size:12px; color:rgba(234,240,255,0.72);">Working</div>
+        <div style="font-size:22px; font-weight:800;">{{ working }}</div>
+      </div>
+      <div style="flex:1; min-width:180px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05);">
+        <div style="font-size:12px; color:rgba(234,240,255,0.72);">Defective</div>
+        <div style="font-size:22px; font-weight:800;">{{ defective }}</div>
+      </div>
+      <div style="flex:1; min-width:180px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05);">
+        <div style="font-size:12px; color:rgba(234,240,255,0.72);">For Repair</div>
+        <div style="font-size:22px; font-weight:800;">{{ repair }}</div>
+      </div>
+      <div style="flex:1; min-width:180px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05);">
+        <div style="font-size:12px; color:rgba(234,240,255,0.72);">Missing</div>
+        <div style="font-size:22px; font-weight:800;">{{ missing }}</div>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="quick" style="justify-content:flex-start; margin-bottom:12px;">
+      <a class="chip" href="/admin/inventory">All</a>
+      <a class="chip" href="/admin/inventory?room=ML">ML</a>
+      <a class="chip" href="/admin/inventory?room=PL">PL</a>
+      <a class="chip" href="/admin/inventory?room=308">308</a>
+      {% if room_filter in ("ML","PL","308") %}
+        <span style="margin-left:8px; font-size:13px; color:rgba(234,240,255,0.75);">
+          Filter: <strong>{{ room_filter }}</strong>
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- ADD EQUIPMENT -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
+      <div style="border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:16px; background:rgba(255,255,255,0.05);">
+        <h2 style="margin:0 0 10px; font-size:16px;">Add Equipment</h2>
+
+        <form class="form" method="POST" action="/admin/inventory/add">
+
+          <div class="field">
+            <label>Asset Tag (optional)</label>
+            <input name="asset_tag" type="text" placeholder="e.g. CCIT-0001">
+          </div>
+
+          <div class="field">
+            <label>Equipment Name</label>
+            <input name="name" type="text" placeholder="e.g. Desktop PC" required>
+          </div>
+
+          <div class="field">
+            <label>Category</label>
+            <input name="category" type="text" placeholder="e.g. PC / Peripheral / Network / AV" required>
+          </div>
+
+          <div class="field">
+            <label>Room</label>
+            <select name="room" required style="width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.10); color:#eaf0ff;">
+              <option value="" disabled selected>Select room</option>
+              <option value="ML">ML</option>
+              <option value="PL">PL</option>
+              <option value="308">308</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Unit No.</label>
+            <input name="unit_no" type="text" placeholder="e.g. PC-12 / PRJ-1" required>
+          </div>
+
+          <div class="field">
+            <label>Status</label>
+            <select name="status" style="width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.10); color:#eaf0ff;">
+              <option>Working</option>
+              <option>Defective</option>
+              <option>For Repair</option>
+              <option>Missing</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Condition Note (optional)</label>
+            <input name="condition_note" type="text" placeholder="e.g. Keyboard missing key">
+          </div>
+
+          <button class="btn" type="submit">Add Equipment</button>
+        </form>
+      </div>
+
+      <div style="border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:16px; background:rgba(255,255,255,0.05);">
+        <h2 style="margin:0 0 10px; font-size:16px;">How to use</h2>
+        <div style="font-size:13px; color:rgba(234,240,255,0.80); line-height:1.6;">
+          <ul style="margin:0; padding-left:18px;">
+            <li>Add equipment per room (ML/PL/308).</li>
+            <li>Update status when equipment is defective/repair.</li>
+            <li>Click <strong>Monitor</strong> to add inspection logs.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div style="overflow:auto; border:1px solid rgba(255,255,255,0.12); border-radius:16px;">
+      <table style="width:100%; border-collapse:collapse; min-width:1050px;">
+        <thead>
+          <tr style="text-align:left; background: rgba(255,255,255,0.06);">
+            <th style="padding:12px;">Asset Tag</th>
+            <th style="padding:12px;">Name</th>
+            <th style="padding:12px;">Category</th>
+            <th style="padding:12px;">Room</th>
+            <th style="padding:12px;">Unit</th>
+            <th style="padding:12px;">Status</th>
+            <th style="padding:12px;">Note</th>
+            <th style="padding:12px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in equipment %}
+            <tr style="border-top:1px solid rgba(255,255,255,0.10);">
+              <td style="padding:12px;">{{ e.asset_tag or "-" }}</td>
+              <td style="padding:12px; font-weight:700;">{{ e.name }}</td>
+              <td style="padding:12px;">{{ e.category }}</td>
+              <td style="padding:12px;">{{ e.room }}</td>
+              <td style="padding:12px; font-weight:700;">{{ e.unit_no }}</td>
+              <td style="padding:12px;">
+                <span style="padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); font-size:12px; font-weight:800;">
+                  {{ e.status }}
+                </span>
+              </td>
+              <td style="padding:12px; font-size:12px; color:rgba(234,240,255,0.75);">
+                {{ e.condition_note }}
+              </td>
+              <td style="padding:12px; display:flex; gap:8px; flex-wrap:wrap;">
+
+                <a class="chip" href="/admin/monitoring/{{ e.id }}">Monitor</a>
+
+                <form method="POST" action="/admin/inventory/{{ e.id }}/status" style="display:flex; gap:8px; align-items:center;">
+                  <select name="status" style="padding:8px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.10); color:#eaf0ff;">
+                    <option {% if e.status=='Working' %}selected{% endif %}>Working</option>
+                    <option {% if e.status=='Defective' %}selected{% endif %}>Defective</option>
+                    <option {% if e.status=='For Repair' %}selected{% endif %}>For Repair</option>
+                    <option {% if e.status=='Missing' %}selected{% endif %}>Missing</option>
+                  </select>
+                  <input name="condition_note" type="text" placeholder="Update note..." value="{{ e.condition_note }}" style="padding:8px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.10); color:#eaf0ff;">
+                  <button class="chip" type="submit" style="border:none; cursor:pointer;">Update</button>
+                </form>
+
+                <form method="POST" action="/admin/inventory/{{ e.id }}/delete" onsubmit="return confirm('Delete this equipment?');">
+                  <button class="chip" type="submit" style="border:none; cursor:pointer;">Delete</button>
+                </form>
+
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+</main>
+
+</body>
+</html>

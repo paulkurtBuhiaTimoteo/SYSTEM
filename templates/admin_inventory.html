@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Inventory | ISSUE REPORTING</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+body{
+  min-height:100vh;
+  color:#f5f7ff;
+  background:
+    linear-gradient(rgba(22,8,8,0.74), rgba(22,8,8,0.74)),
+    radial-gradient(circle at top, rgba(255,120,120,0.16), transparent 35%),
+    linear-gradient(135deg,#1a0505,#2a0909,#120202);
+}
+
+.page{
+  min-height:100vh;
+  padding:24px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.card{
+  width:min(1350px,100%);
+  padding:28px;
+  border-radius:24px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 20px 60px rgba(0,0,0,0.28);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+.brand{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:22px;
+  flex-wrap:wrap;
+}
+
+.brand-left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.logo{
+  width:72px;
+  height:68px;
+  flex:0 0 auto;
+  border-radius:20px;
+  background:url("/static/ccit-logo.png") center/contain no-repeat;
+  filter:drop-shadow(0 10px 24px rgba(0,0,0,.28));
+}
+
+.brand h1{
+  font-size:24px;
+  line-height:1.1;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.brand p{
+  font-size:14px;
+  color:rgba(245,247,255,0.78);
+}
+
+.top-nav{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.nav-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:10px 18px;
+  border-radius:12px;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.2px;
+  color:#f5f7ff;
+  background:linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:0 8px 24px rgba(0,0,0,0.18);
+  transition:all .25s ease;
+}
+
+.nav-btn:hover{
+  transform:translateY(-2px);
+  background:linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.10));
+  border-color:rgba(255,255,255,0.26);
+  box-shadow:0 12px 28px rgba(0,0,0,0.24);
+}
+
+.nav-btn.back{
+  background:linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+}
+
+.nav-btn.logout{
+  background:linear-gradient(135deg, rgba(255,80,80,0.24), rgba(180,30,30,0.18));
+  border:1px solid rgba(255,120,120,0.28);
+}
+
+.nav-btn.logout:hover{
+  background:linear-gradient(135deg, rgba(255,90,90,0.34), rgba(180,30,30,0.25));
+}
+
+.flash-wrap{
+  margin-bottom:12px;
+}
+
+.flash-msg{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.08);
+  color:rgba(234,240,255,0.95);
+  font-size:13px;
+  margin-bottom:8px;
+  text-align:center;
+}
+
+.form-card{
+  background:rgba(20,10,10,0.94);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:24px;
+  padding:22px;
+  margin-bottom:24px;
+}
+
+.form-card h2{
+  margin-top:0;
+  margin-bottom:20px;
+  font-size:28px;
+  font-weight:800;
+}
+
+.category-manager{
+  margin-bottom:18px;
+  padding:16px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04);
+}
+
+.category-manager h3{
+  font-size:16px;
+  margin-bottom:12px;
+}
+
+.category-form{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.category-form input{
+  flex:1;
+  min-width:220px;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  outline:none;
+}
+
+.category-form button{
+  padding:12px 16px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#22c55e,#15803d);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.category-list{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.category-chip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+.category-chip span{
+  font-size:13px;
+  font-weight:700;
+}
+
+.category-chip form{
+  margin:0;
+}
+
+.category-chip button{
+  border:none;
+  border-radius:999px;
+  padding:5px 10px;
+  background:linear-gradient(135deg,#ef4444,#b91c1c);
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr auto;
+  gap:16px;
+  align-items:end;
+}
+
+.form-grid label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  color:rgba(245,247,255,0.86);
+  margin-bottom:8px;
+}
+
+.form-grid input,
+.form-grid select{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+  color:#f5f7ff;
+  outline:none;
+  font-size:14px;
+  transition:all .2s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.form-grid input::placeholder{
+  color:rgba(234,240,255,0.62);
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.search-box:focus{
+  border-color:rgba(255,100,100,0.55);
+  box-shadow:0 0 0 3px rgba(255,77,77,0.16);
+}
+
+.form-grid select{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  cursor:pointer;
+  padding-right:48px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #ffffff 50%),
+    linear-gradient(135deg, #ffffff 50%, transparent 50%),
+    linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+  background-position:
+    calc(100% - 20px) calc(50% - 3px),
+    calc(100% - 14px) calc(50% - 3px),
+    0 0;
+  background-size:6px 6px, 6px 6px, 100% 100%;
+  background-repeat:no-repeat;
+}
+
+.form-grid select option{
+  background:#0a0a0a;
+  color:#ffffff;
+}
+
+.mini-btn{
+  padding:14px 18px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#c62828,#8f1717);
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+  font-size:14px;
+  box-shadow:0 10px 24px rgba(0,0,0,0.22);
+  transition:all .2s ease;
+}
+
+.mini-btn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.05);
+}
+
+.small-btn{
+  padding:9px 14px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#4b5563,#374151);
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+  transition:all .2s ease;
+}
+
+.small-btn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.05);
+}
+
+.small-note{
+  font-size:12px;
+  color:rgba(234,240,255,0.72);
+  margin-top:10px;
+}
+
+.search-box{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.10);
+  color:#f5f7ff;
+  margin-bottom:16px;
+  outline:none;
+  font-size:14px;
+}
+
+.search-box::placeholder{
+  color:rgba(234,240,255,0.60);
+}
+
+.inventory-wrap{
+  background:rgba(20,10,10,0.94);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  overflow:auto;
+}
+
+.inventory-wrap table{
+  width:100%;
+  min-width:1000px;
+  border-collapse:collapse;
+}
+
+.inventory-wrap thead{
+  background:rgba(255,255,255,0.08);
+}
+
+.inventory-wrap th{
+  padding:14px 12px;
+  text-align:left;
+  color:#fff;
+  font-size:13px;
+}
+
+.inventory-wrap td{
+  padding:14px 12px;
+  color:#eaf0ff;
+  border-top:1px solid rgba(255,255,255,0.10);
+  vertical-align:top;
+  font-size:14px;
+}
+
+.inventory-wrap tbody tr:hover{
+  background:rgba(255,255,255,0.04);
+}
+
+.qty-pill{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  display:inline-block;
+}
+
+.total-pill{
+  background:#2563eb;
+  color:#fff;
+}
+
+.available-pill{
+  background:#16a34a;
+  color:#fff;
+}
+
+.out-pill{
+  background:#dc2626;
+  color:#fff;
+}
+
+@media (max-width:900px){
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:768px){
+  .page{
+    padding:16px;
+  }
+
+  .card{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .brand h1{
+    font-size:20px;
+  }
+
+  .top-nav{
+    width:100%;
+  }
+
+  .nav-btn{
+    flex:1;
+  }
+}
+</style>
+</head>
+<body>
+
+<main class="page">
+<section class="card">
+
+<div class="brand">
+  <div class="brand-left">
+    <div class="logo"></div>
+    <div>
+      <h1>INVENTORY</h1>
+      <p>add and manage borrowable equipment stock</p>
+    </div>
+  </div>
+
+  <div class="top-nav">
+    <a class="nav-btn" href="/admin/inventory">Inventory</a>
+    <a class="nav-btn" href="/admin/borrowing">Borrowing</a>
+    <a class="nav-btn back" href="/admin/dashboard">Back</a>
+    <a class="nav-btn logout" href="/logout">Logout</a>
+  </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for category, message in messages %}
+        <div class="flash-msg">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="form-card">
+  <h2>Add Equipment Stock</h2>
+
+  <div class="category-manager">
+    <h3>Manage Categories</h3>
+
+    <form class="category-form" method="POST" action="/admin/categories/add">
+      <input type="text" name="category_name" placeholder="Enter category name (e.g. Equipment, Printed Materials, AVR Items)" required>
+      <button type="submit">Add Category</button>
+    </form>
+
+    <div class="category-list">
+      {% for c in categories %}
+      <div class="category-chip">
+        <span>{{ c.name }}</span>
+        <form method="POST" action="/admin/categories/{{ c.id }}/delete" onsubmit="return confirm('Delete this category?');">
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <form method="POST" action="/admin/inventory/add" class="form-grid">
+    <div>
+      <label>Item Name</label>
+      <input name="name" type="text" placeholder="e.g. Pentab, Thesis, Hardbound" required>
+    </div>
+
+    <div>
+      <label>Category</label>
+      <select name="category" required>
+        <option value="" disabled selected>Select category</option>
+        {% for c in categories %}
+        <option value="{{ c.name }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label>Quantity</label>
+      <input name="quantity" type="number" min="1" placeholder="e.g. 10" required>
+    </div>
+
+    <div>
+      <label>&nbsp;</label>
+      <button class="mini-btn" type="submit" style="width:100%;">Add</button>
+    </div>
+  </form>
+
+  <div class="small-note">
+    
+  </div>
+</div>
+
+<input id="searchInput" class="search-box" placeholder="Search equipment or category...">
+
+<div class="inventory-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Equipment Name</th>
+        <th>Category</th>
+        <th>Total Qty</th>
+        <th>Available Qty</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody id="inventoryTable">
+      {% for e in equipment %}
+      <tr>
+        <td><strong>{{ e.name }}</strong></td>
+        <td>{{ e.category }}</td>
+        <td>
+          <span class="qty-pill total-pill">{{ e.total_qty }}</span>
+        </td>
+        <td>
+          {% if e.available_qty > 0 %}
+            <span class="qty-pill available-pill">{{ e.available_qty }}</span>
+          {% else %}
+            <span class="qty-pill out-pill">0</span>
+          {% endif %}
+        </td>
+        <td>
+          <form method="POST" action="/admin/inventory/{{ e.id }}/delete" onsubmit="return confirm('Delete this equipment?');">
+            <button class="small-btn" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</section>
+</main>
+
+<script>
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function () {
+  let filter = searchInput.value.toLowerCase();
+  let rows = document.querySelectorAll("#inventoryTable tr");
+
+  rows.forEach(row => {
+    let text = row.innerText.toLowerCase();
+    row.style.display = text.includes(filter) ? "" : "none";
+  });
+});
+</script>
+
+</body>
+</html>

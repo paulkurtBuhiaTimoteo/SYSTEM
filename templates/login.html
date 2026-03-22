@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | ISSUE REPORTING</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <main class="page">
+
+    <section class="card">
+
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>ISSUE REPORTING</h1>
+          <p>Sign in to continue.</p>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div style="margin-bottom:12px;">
+            {% for category, message in messages %}
+              <div style="
+                padding:10px 12px;
+                border-radius:12px;
+                border:1px solid rgba(255,255,255,0.12);
+                background: rgba(255,255,255,0.08);
+                color: rgba(234,240,255,0.95);
+                font-size: 13px;
+                margin-bottom: 8px;
+                text-align:center;
+              ">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form class="form" method="POST" action="/login">
+
+        <div class="field">
+          <label for="email">Student Email</label>
+          <input
+            id="email"
+            name="email"
+            type="text"
+            placeholder="Student email"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              required
+            >
+            <button type="button" class="toggle" onclick="togglePassword()">Show</button>
+          </div>
+        </div>
+
+        <button class="btn" type="submit">Sign in</button>
+
+        <p class="footer">
+          No account?
+          <a class="link" href="/register">Create one</a>
+        </p>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
