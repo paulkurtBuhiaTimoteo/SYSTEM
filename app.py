@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import json
+import traceback
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -11,7 +12,7 @@ DB_NAME = "/tmp/database.db"
 
 
 def get_db():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_NAME, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -120,18 +121,28 @@ def require_admin():
     return session.get("role") == "admin"
 
 
+@app.route("/health")
+def health():
+    return "ok", 200
+
+
 @app.route("/")
 def login_page():
-    conn = get_db()
-    reported = conn.execute("""
-        SELECT room, computer_no, issue_type, created_at
-        FROM issues
-        WHERE status = 'Pending'
-        ORDER BY id DESC
-        LIMIT 20
-    """).fetchall()
-    conn.close()
-    return render_template("login.html", reported=reported)
+    try:
+        conn = get_db()
+        reported = conn.execute("""
+            SELECT room, computer_no, issue_type, created_at
+            FROM issues
+            WHERE status = 'Pending'
+            ORDER BY id DESC
+            LIMIT 20
+        """).fetchall()
+        conn.close()
+        return render_template("login.html", reported=reported)
+    except Exception as e:
+        print("LOGIN PAGE ERROR:", e)
+        traceback.print_exc()
+        return f"Server error: {e}", 500
 
 
 @app.route("/login", methods=["POST"])
