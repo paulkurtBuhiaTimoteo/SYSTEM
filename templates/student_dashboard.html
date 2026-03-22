@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Dashboard</title>
+
+<style>
+:root{
+  --text:#f5f8ff;
+  --muted:rgba(245,248,255,0.75);
+  --placeholder:rgba(255,255,255,0.45);
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  color:var(--text);
+  background:
+    linear-gradient(rgba(6,10,18,.65),rgba(6,10,18,.75)),
+    url("/static/formysystem.jpg") center/cover no-repeat fixed;
+}
+
+.page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px;
+}
+
+.card{
+  width:min(1200px,100%);
+  padding:30px;
+  border-radius:26px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.brand{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.brand-left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.logo{
+  width:70px;
+  height:70px;
+  background:url("/static/ccit-logo.png") center/contain no-repeat;
+}
+
+.brand h1{
+  margin:0;
+  font-size:20px;
+}
+
+.brand p{
+  margin:4px 0 0;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.link{
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:25px;
+}
+
+.panel{
+  padding:22px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  display:flex;
+  flex-direction:column;
+  min-height:580px;
+}
+
+.panel h2{
+  margin:0 0 18px;
+  font-size:22px;
+}
+
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+label{
+  font-size:14px;
+  font-weight:600;
+}
+
+.room-list{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.room-btn{
+  padding:10px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.08);
+  color:white;
+  cursor:pointer;
+  font-weight:700;
+  transition:.2s ease;
+}
+
+.room-btn:hover{
+  background:rgba(255,255,255,0.14);
+}
+
+.room-active{
+  background:linear-gradient(135deg,#b33d52,#e15b5b);
+  border-color:transparent;
+}
+
+.selected-room{
+  margin:0 0 4px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.10);
+  color:#fff;
+  outline:none;
+  font-size:15px;
+}
+
+input::placeholder{
+  color:var(--placeholder);
+}
+
+input:focus{
+  border-color:rgba(255,255,255,0.28);
+  background:rgba(255,255,255,0.14);
+}
+
+/* custom dropdown */
+.custom-select{
+  position:relative;
+  width:100%;
+}
+
+.custom-select-trigger{
+  width:100%;
+  padding:14px 46px 14px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.10);
+  color:#fff;
+  outline:none;
+  font-size:15px;
+  cursor:pointer;
+  text-align:left;
+  position:relative;
+  transition:.2s ease;
+}
+
+.custom-select-trigger:hover,
+.custom-select.open .custom-select-trigger{
+  background:rgba(255,255,255,0.14);
+  border-color:rgba(255,255,255,0.28);
+}
+
+.custom-select-trigger::after{
+  content:"⌄";
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:18px;
+  color:rgba(255,255,255,0.85);
+  transition:.2s ease;
+}
+
+.custom-select.open .custom-select-trigger::after{
+  transform:translateY(-50%) rotate(180deg);
+}
+
+.custom-select-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  left:0;
+  width:100%;
+  max-height:220px;
+  overflow-y:auto;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(20,24,36,0.96);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.30);
+  padding:8px;
+  display:none;
+  z-index:50;
+}
+
+.custom-select.open .custom-select-menu{
+  display:block;
+}
+
+.custom-option{
+  padding:12px 12px;
+  border-radius:10px;
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.custom-option:hover{
+  background:rgba(255,255,255,0.10);
+}
+
+.custom-option.selected{
+  background:linear-gradient(135deg,#b33d52,#e15b5b);
+}
+
+.hidden-select{
+  display:none;
+}
+
+.btn{
+  margin-top:10px;
+  padding:15px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,#b33d52,#e15b5b);
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+  font-size:15px;
+  transition:.2s ease;
+}
+
+.btn:hover{
+  filter:brightness(1.06);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  text-align:left;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  font-size:15px;
+}
+
+td{
+  padding:12px 10px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:15px;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.fixed{ background:rgba(76,175,80,.2); }
+.pending{ background:rgba(255,193,7,.2); color:#fff; }
+.rejected{ background:rgba(244,67,54,.2); }
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    min-height:auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<main class="page">
+<section class="card">
+
+<div class="brand">
+  <div class="brand-left">
+    <div class="logo"></div>
+    <div>
+      <h1>STUDENT DASHBOARD</h1>
+      <p>Welcome {{ session.fullname }}</p>
+    </div>
+  </div>
+  <a class="link" href="/logout">Logout</a>
+</div>
+
+<div class="grid">
+
+  <!-- LEFT -->
+  <div class="panel">
+    <h2>Report Issue</h2>
+
+    <form method="POST" action="/student/report" class="form" onsubmit="return validateRoom()">
+
+      <label>Room</label>
+      <input type="hidden" id="room" name="room">
+
+      <div class="room-list">
+        {% for r in rooms %}
+        <button type="button" class="room-btn" onclick="selectRoom('{{ r.name }}', this)">{{ r.name }}</button>
+        {% endfor %}
+      </div>
+
+      <p class="selected-room">Selected: <span id="roomText">None</span></p>
+
+      <label>Computer Number</label>
+      <div class="custom-select" data-name="computer_no">
+        <button type="button" class="custom-select-trigger">Select Computer</button>
+        <div class="custom-select-menu">
+          {% for n in range(1,41) %}
+          <div class="custom-option" data-value="{{ n }}">Computer {{ n }}</div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="computer_no" class="hidden-select" required>
+      </div>
+
+      <label>Issue Type</label>
+      <div class="custom-select" data-name="issue_type">
+        <button type="button" class="custom-select-trigger">Select Issue</button>
+        <div class="custom-select-menu">
+          <div class="custom-option" data-value="No Internet">No Internet</div>
+          <div class="custom-option" data-value="PC Not Turning On">PC Not Turning On</div>
+          <div class="custom-option" data-value="Software Issue">Software Issue</div>
+        </div>
+        <input type="hidden" name="issue_type" class="hidden-select" required>
+      </div>
+
+      <label>Description</label>
+      <input type="text" name="description" placeholder="Describe issue" required>
+
+      <button class="btn" type="submit">Submit Issue</button>
+    </form>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="panel">
+    <h2>My Issues</h2>
+
+    <table>
+      <tr>
+        <th>Room</th>
+        <th>PC</th>
+        <th>Issue</th>
+        <th>Status</th>
+      </tr>
+
+      {% for i in issues %}
+      <tr>
+        <td>{{ i.room }}</td>
+        <td>{{ i.computer_no }}</td>
+        <td>{{ i.issue_type }}</td>
+        <td>
+          <span class="status {{ i.status|lower }}">
+            {{ i.status }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+</div>
+
+</section>
+</main>
+
+<script>
+function selectRoom(room, btn){
+  document.getElementById("room").value = room;
+  document.getElementById("roomText").innerText = room;
+
+  document.querySelectorAll(".room-btn").forEach(b => b.classList.remove("room-active"));
+  btn.classList.add("room-active");
+}
+
+function validateRoom(){
+  if(!document.getElementById("room").value){
+    alert("Please select a room");
+    return false;
+  }
+
+  const computer = document.querySelector('input[name="computer_no"]').value;
+  const issue = document.querySelector('input[name="issue_type"]').value;
+
+  if(!computer){
+    alert("Please select a computer");
+    return false;
+  }
+
+  if(!issue){
+    alert("Please select an issue type");
+    return false;
+  }
+
+  return true;
+}
+
+document.querySelectorAll('.custom-select').forEach(select => {
+  const trigger = select.querySelector('.custom-select-trigger');
+  const menu = select.querySelector('.custom-select-menu');
+  const hiddenInput = select.querySelector('.hidden-select');
+  const options = select.querySelectorAll('.custom-option');
+
+  trigger.addEventListener('click', function(e){
+    e.stopPropagation();
+
+    document.querySelectorAll('.custom-select').forEach(other => {
+      if(other !== select){
+        other.classList.remove('open');
+      }
+    });
+
+    select.classList.toggle('open');
+  });
+
+  options.forEach(option => {
+    option.addEventListener('click', function(){
+      options.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+
+      trigger.textContent = this.textContent;
+      hiddenInput.value = this.dataset.value;
+      select.classList.remove('open');
+    });
+  });
+});
+
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.custom-select').forEach(select => {
+    if(!select.contains(e.target)){
+      select.classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
