@@ -801,7 +801,8 @@ def admin_return_equipment(borrow_id):
     return redirect(url_for("admin_borrowing"))
 
 
-init_db()
+if not os.path.exists(DB_NAME):
+    init_db()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
