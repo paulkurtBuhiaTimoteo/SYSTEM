@@ -21,9 +21,9 @@ body{
   min-height:100vh;
   color:#f5f7ff;
   background:
-    linear-gradient(rgba(22,8,8,0.74), rgba(22,8,8,0.74)),
-    radial-gradient(circle at top, rgba(255,120,120,0.16), transparent 35%),
-    linear-gradient(135deg,#1a0505,#2a0909,#120202);
+    linear-gradient(rgba(22,8,8,0.78), rgba(22,8,8,0.78)),
+    radial-gradient(circle at top, rgba(255,120,120,0.12), transparent 34%),
+    linear-gradient(135deg,#140303,#220707,#0f0202);
 }
 
 .page{
@@ -127,7 +127,7 @@ body{
 }
 
 .flash-wrap{
-  margin-bottom:12px;
+  margin-bottom:14px;
 }
 
 .flash-msg{
@@ -141,26 +141,63 @@ body{
   text-align:center;
 }
 
-.form-card{
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.stat-card{
+  background:rgba(20,10,10,0.94);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px;
+  padding:18px;
+}
+
+.stat-label{
+  font-size:12px;
+  color:rgba(255,255,255,0.72);
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.stat-value{
+  font-size:28px;
+  font-weight:800;
+  line-height:1;
+}
+
+.layout-grid{
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:18px;
+  align-items:start;
+}
+
+.side-panel,
+.main-panel{
   background:rgba(20,10,10,0.94);
   border:1px solid rgba(255,255,255,0.12);
   border-radius:24px;
   padding:22px;
-  margin-bottom:24px;
 }
 
-.form-card h2{
-  margin-top:0;
-  margin-bottom:20px;
-  font-size:28px;
+.panel-title{
+  font-size:24px;
   font-weight:800;
+  margin-bottom:18px;
 }
 
 .form-grid{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;
-  gap:16px;
-  align-items:end;
+  grid-template-columns:1fr 1fr;
+  gap:14px 16px;
+}
+
+.field-full{
+  grid-column:1 / -1;
 }
 
 .form-grid label{
@@ -251,21 +288,31 @@ body{
 .small-note{
   font-size:12px;
   color:rgba(234,240,255,0.72);
-  margin-top:10px;
+  margin-top:12px;
+  line-height:1.5;
 }
 
 .hidden{
   display:none;
 }
 
+.toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
 .search-box{
-  width:100%;
+  flex:1;
+  min-width:260px;
   padding:14px 16px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,0.12);
   background:rgba(255,255,255,0.10);
   color:#f5f7ff;
-  margin-bottom:18px;
   outline:none;
   font-size:14px;
 }
@@ -274,21 +321,49 @@ body{
   color:rgba(234,240,255,0.60);
 }
 
+.filter-tabs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.filter-btn{
+  border:none;
+  cursor:pointer;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:700;
+  color:#f5f7ff;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.10);
+  transition:all .2s ease;
+}
+
+.filter-btn:hover{
+  background:rgba(255,255,255,0.14);
+}
+
+.filter-btn.active{
+  background:linear-gradient(135deg,#c62828,#8f1717);
+  border-color:rgba(255,120,120,0.25);
+}
+
 .inventory-wrap{
-  background:rgba(20,10,10,0.94);
-  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(12,8,8,0.95);
+  border:1px solid rgba(255,255,255,0.10);
   border-radius:18px;
   overflow:auto;
 }
 
 .inventory-wrap table{
   width:100%;
-  min-width:1300px;
+  min-width:1100px;
   border-collapse:collapse;
 }
 
 .inventory-wrap thead{
-  background:rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.06);
 }
 
 .inventory-wrap th{
@@ -296,18 +371,25 @@ body{
   text-align:left;
   color:#fff;
   font-size:13px;
+  white-space:nowrap;
 }
 
 .inventory-wrap td{
   padding:14px 12px;
   color:#eaf0ff;
-  border-top:1px solid rgba(255,255,255,0.1);
+  border-top:1px solid rgba(255,255,255,0.08);
   vertical-align:top;
   font-size:14px;
 }
 
 .inventory-wrap tbody tr:hover{
   background:rgba(255,255,255,0.04);
+}
+
+.item-sub{
+  font-size:11px;
+  opacity:0.75;
+  margin-top:4px;
 }
 
 .status-pill{
@@ -334,16 +416,23 @@ body{
 }
 
 .overdue-row{
-  background:#7f1d1d !important;
+  background:rgba(127,29,29,0.48) !important;
 }
 
-@media (max-width:1300px){
-  .form-grid{
+.empty-state{
+  text-align:center;
+  padding:24px;
+  color:rgba(255,255,255,0.70);
+  font-size:14px;
+}
+
+@media (max-width:1200px){
+  .layout-grid{
     grid-template-columns:1fr;
   }
 
-  #itemTitleWrap{
-    grid-column:auto !important;
+  .stats-grid{
+    grid-template-columns:repeat(2, 1fr);
   }
 }
 
@@ -368,6 +457,18 @@ body{
   .nav-btn{
     flex:1;
   }
+
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field-full{
+    grid-column:auto;
+  }
 }
 </style>
 </head>
@@ -380,8 +481,8 @@ body{
   <div class="brand-left">
     <div class="logo"></div>
     <div>
-      <h1>BORROWING</h1>
-      <p>Record borrowed equipment by students</p>
+      <h1>BORROWING DASHBOARD</h1>
+      <p>Monitor, record, and filter borrowed items by status</p>
     </div>
   </div>
 
@@ -397,135 +498,171 @@ body{
   {% if messages %}
     <div class="flash-wrap">
       {% for category, message in messages %}
-        <div class="flash-msg">
-          {{ message }}
-        </div>
+        <div class="flash-msg">{{ message }}</div>
       {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
 
-<div class="form-card">
-  <h2>Add Borrowing Record</h2>
-
-  <form method="POST" action="/admin/borrowing/add" class="form-grid">
-    <div>
-      <label>Category</label>
-      <select name="item_category" id="item_category" onchange="updateItemOptions()" required>
-        <option value="" disabled selected>Select category</option>
-        {% for c in categories %}
-          <option value="{{ c.name }}">{{ c.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div id="itemSelectWrap">
-      <label id="borrowedItemLabel">Borrowed Item</label>
-      <select name="borrowed_item" id="borrowed_item" onchange="toggleItemDetails()" required>
-        <option value="" disabled selected>Select item</option>
-      </select>
-      <div id="stockNote" class="stock-note hidden"></div>
-    </div>
-
-    <div>
-      <label>Date Borrowed</label>
-      <input type="text" value="{{ now_text }}" readonly>
-    </div>
-
-    <div>
-      <label>Student ID</label>
-      <input type="text" name="borrower_student_id" placeholder="Student ID" required>
-    </div>
-
-    <div>
-      <label>Student Name</label>
-      <input type="text" name="borrower_name" placeholder="Student name" required>
-    </div>
-
-    <div>
-      <button class="mini-btn" type="submit" style="width:100%;">Save</button>
-    </div>
-
-    <input type="hidden" name="equipment_id" id="equipment_id">
-
-    <div id="itemTitleWrap" class="hidden" style="grid-column:span 2;">
-      <label id="itemTitleLabel">Item Title / Name</label>
-      <input type="text" name="item_title" id="item_title" placeholder="Enter title or name if needed">
-    </div>
-
-    <div id="borrowLimitWrap">
-      <label>Borrow Limit</label>
-      <select name="borrow_limit_days" id="borrow_limit_days">
-        <option value="1">1 day</option>
-        <option value="2">2 days</option>
-        <option value="3" selected>3 days</option>
-        <option value="5">5 days</option>
-        <option value="7">7 days</option>
-        <option value="14">14 days</option>
-      </select>
-    </div>
-  </form>
-
-  <div class="small-note">
-    Categories shown here come from Inventory. Borrow limit is automatically used for due date.
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Available Stock</div>
+    <div class="stat-value">{{ available_stock }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Borrowed Items</div>
+    <div class="stat-value">{{ borrowed_stock }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Returned</div>
+    <div class="stat-value">{{ returned }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Overdue</div>
+    <div class="stat-value">{{ overdue }}</div>
   </div>
 </div>
 
-<input id="searchInput" class="search-box" placeholder="Search borrowed item, category, student ID, or student name...">
+<div class="layout-grid">
+  <div class="side-panel">
+    <div class="panel-title">Add Borrowing Record</div>
 
-<div class="inventory-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th>Borrowed Item</th>
-        <th>Category</th>
-        <th>Date Borrowed</th>
-        <th>Student ID</th>
-        <th>Student Name</th>
-        <th>Due Date</th>
-        <th>Return Date</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+    <form method="POST" action="/admin/borrowing/add" class="form-grid">
+      <div class="field-full">
+        <label>Category</label>
+        <select name="item_category" id="item_category" onchange="updateItemOptions()" required>
+          <option value="" disabled selected>Select category</option>
+          {% for c in categories %}
+            <option value="{{ c.name }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <tbody id="borrowTable">
-      {% for b in borrow_logs %}
-      <tr class="{% if b.status == 'Overdue' %}overdue-row{% endif %}">
-        <td>
-          {{ b.equipment_name }}
-          {% if b.item_title %}
-            <div style="font-size:11px; opacity:0.75; margin-top:4px;">{{ b.item_title }}</div>
-          {% endif %}
-        </td>
-        <td>{{ b.item_category }}</td>
-        <td>{{ b.borrow_date }}</td>
-        <td>{{ b.borrower_student_id }}</td>
-        <td>{{ b.borrower_name }}</td>
-        <td>{{ b.due_date }}</td>
-        <td>{{ b.return_date or "-" }}</td>
-        <td>
-          {% if b.status == 'Borrowed' %}
-            <span class="status-pill borrowed-pill">Borrowed</span>
-          {% elif b.status == 'Returned' %}
-            <span class="status-pill returned-pill">Returned</span>
-          {% else %}
-            <span class="status-pill overdue-pill">Overdue</span>
-          {% endif %}
-        </td>
-        <td>
-          {% if b.status != 'Returned' %}
-          <form method="POST" action="/admin/borrowing/return/{{ b.id }}">
-            <button class="mini-btn" style="padding:8px 12px;">Return</button>
-          </form>
-          {% else %}
-          -
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      <div class="field-full" id="itemSelectWrap">
+        <label id="borrowedItemLabel">Borrowed Item</label>
+        <select name="borrowed_item" id="borrowed_item" onchange="toggleItemDetails()" required>
+          <option value="" disabled selected>Select item</option>
+        </select>
+        <div id="stockNote" class="stock-note hidden"></div>
+      </div>
+
+      <div>
+        <label>Date Borrowed</label>
+        <input type="text" value="{{ now_text }}" readonly>
+      </div>
+
+      <div>
+        <label>Borrow Limit</label>
+        <select name="borrow_limit_days" id="borrow_limit_days">
+          <option value="1">1 day</option>
+          <option value="2">2 days</option>
+          <option value="3" selected>3 days</option>
+          <option value="5">5 days</option>
+          <option value="7">7 days</option>
+          <option value="14">14 days</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Student ID</label>
+        <input type="text" name="borrower_student_id" placeholder="Student ID" required>
+      </div>
+
+      <div>
+        <label>Student Name</label>
+        <input type="text" name="borrower_name" placeholder="Student name" required>
+      </div>
+
+      <input type="hidden" name="equipment_id" id="equipment_id">
+
+      <div id="itemTitleWrap" class="field-full hidden">
+        <label id="itemTitleLabel">Item Title / Name</label>
+        <input type="text" name="item_title" id="item_title" placeholder="Enter title or name if needed">
+      </div>
+
+      <div class="field-full">
+        <button class="mini-btn" type="submit" style="width:100%;">Save Borrowing Record</button>
+      </div>
+    </form>
+
+    <div class="small-note">
+      Categories shown here come from Inventory. Borrow limit is automatically used for due date.
+    </div>
+  </div>
+
+  <div class="main-panel">
+    <div class="panel-title">Borrowing Records</div>
+
+    <div class="toolbar">
+      <input id="searchInput" class="search-box" placeholder="Search borrowed item, category, student ID, or student name...">
+
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-status="all" type="button">All</button>
+        <button class="filter-btn" data-status="Borrowed" type="button">Borrowed</button>
+        <button class="filter-btn" data-status="Returned" type="button">Returned</button>
+        <button class="filter-btn" data-status="Overdue" type="button">Overdue</button>
+      </div>
+    </div>
+
+    <div class="inventory-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Borrowed Item</th>
+            <th>Category</th>
+            <th>Date Borrowed</th>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="borrowTable">
+          {% for b in borrow_logs %}
+          <tr class="{% if b.status == 'Overdue' %}overdue-row{% endif %}" data-status="{{ b.status }}">
+            <td>
+              {{ b.equipment_name }}
+              {% if b.item_title %}
+                <div class="item-sub">{{ b.item_title }}</div>
+              {% endif %}
+            </td>
+            <td>{{ b.item_category }}</td>
+            <td>{{ b.borrow_date }}</td>
+            <td>{{ b.borrower_student_id }}</td>
+            <td>{{ b.borrower_name }}</td>
+            <td>{{ b.due_date }}</td>
+            <td>{{ b.return_date or "-" }}</td>
+            <td>
+              {% if b.status == 'Borrowed' %}
+                <span class="status-pill borrowed-pill">Borrowed</span>
+              {% elif b.status == 'Returned' %}
+                <span class="status-pill returned-pill">Returned</span>
+              {% else %}
+                <span class="status-pill overdue-pill">Overdue</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if b.status != 'Returned' %}
+              <form method="POST" action="/admin/borrowing/return/{{ b.id }}">
+                <button class="mini-btn" style="padding:8px 12px;">Return</button>
+              </form>
+              {% else %}
+              -
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div id="emptyState" class="empty-state hidden">
+        No borrowing records found.
+      </div>
+    </div>
+  </div>
 </div>
 
 </section>
@@ -609,16 +746,46 @@ function toggleItemDetails() {
 }
 
 const searchInput = document.getElementById("searchInput");
+const filterButtons = document.querySelectorAll(".filter-btn");
+const rows = document.querySelectorAll("#borrowTable tr");
+const emptyState = document.getElementById("emptyState");
 
-searchInput.addEventListener("keyup", function () {
-  let filter = searchInput.value.toLowerCase();
-  let rows = document.querySelectorAll("#borrowTable tr");
+let activeStatus = "all";
+
+function applyFilters() {
+  const filterText = searchInput.value.toLowerCase();
+  let visibleCount = 0;
 
   rows.forEach(row => {
-    let text = row.innerText.toLowerCase();
-    row.style.display = text.includes(filter) ? "" : "none";
+    const rowText = row.innerText.toLowerCase();
+    const rowStatus = row.dataset.status;
+
+    const matchesSearch = rowText.includes(filterText);
+    const matchesStatus = activeStatus === "all" || rowStatus === activeStatus;
+
+    if (matchesSearch && matchesStatus) {
+      row.style.display = "";
+      visibleCount++;
+    } else {
+      row.style.display = "none";
+    }
+  });
+
+  emptyState.classList.toggle("hidden", visibleCount !== 0);
+}
+
+searchInput.addEventListener("keyup", applyFilters);
+
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", function () {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    activeStatus = this.dataset.status;
+    applyFilters();
   });
 });
+
+applyFilters();
 </script>
 
 </body>
