@@ -36,35 +36,31 @@ body{
   color: var(--text);
   overflow:hidden;
   position:relative;
-
   background:
-    linear-gradient(rgba(6, 10, 18, 0.58), rgba(6, 10, 18, 0.68)),
-    url("/static/formysystem.jpg") center/cover no-repeat fixed;
+    radial-gradient(circle at top, rgba(59,130,246,0.15), transparent 40%),
+    radial-gradient(circle at bottom, rgba(110,168,255,0.08), transparent 50%),
+    linear-gradient(135deg,#020617,#0f172a,#111827);
 }
 
-/* Dark overlay para luminaw ang text */
 body::before{
   content:"";
   position:fixed;
   inset:0;
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 95, 109, 0.18), transparent 28%),
-    radial-gradient(circle at 85% 18%, rgba(110, 168, 255, 0.14), transparent 24%),
-    radial-gradient(circle at 50% 85%, rgba(255, 195, 113, 0.10), transparent 30%),
-    linear-gradient(135deg, rgba(7,17,31,0.62), rgba(10,18,32,0.74));
+    radial-gradient(circle at 20% 30%, rgba(59,130,246,0.10), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(110,168,255,0.08), transparent 40%);
   z-index:0;
   pointer-events:none;
 }
 
-/* Animated blurred floating lights */
 body::after{
   content:"";
   position:fixed;
   inset:-10%;
   background:
-    radial-gradient(circle, rgba(255,95,109,0.18) 0%, transparent 22%),
-    radial-gradient(circle, rgba(110,168,255,0.16) 0%, transparent 20%),
-    radial-gradient(circle, rgba(255,195,113,0.12) 0%, transparent 18%);
+    radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 22%),
+    radial-gradient(circle, rgba(110,168,255,0.12) 0%, transparent 20%),
+    radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 18%);
   background-size: 32% 32%, 26% 26%, 22% 22%;
   background-position: 12% 22%, 82% 18%, 52% 78%;
   filter: blur(55px);
@@ -149,14 +145,6 @@ body::after{
   gap:14px;
   text-align:left;
   margin-bottom:20px;
-}
-
-.logo{
-  width:72px;
-  height:72px;
-  flex:0 0 auto;
-  background: url("/static/ccit-logo.png") center/contain no-repeat;
-  filter: drop-shadow(0 10px 24px rgba(0,0,0,.28));
 }
 
 .brand h1{
@@ -280,9 +268,9 @@ input:focus{
 
   background:
     linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)),
-    linear-gradient(135deg, #b33d52, #e15b5b);
+    linear-gradient(135deg, #2563eb, #3b82f6);
   box-shadow:
-    0 16px 30px rgba(159, 41, 56, 0.30),
+    0 16px 30px rgba(37, 99, 235, 0.30),
     inset 0 1px 0 rgba(255,255,255,0.18);
 
   transition: transform .2s ease, filter .2s ease, box-shadow .25s ease;
@@ -292,7 +280,7 @@ input:focus{
   filter: brightness(1.06);
   transform: translateY(-1px);
   box-shadow:
-    0 18px 34px rgba(159, 41, 56, 0.36),
+    0 18px 34px rgba(37, 99, 235, 0.36),
     inset 0 1px 0 rgba(255,255,255,0.20);
 }
 
@@ -320,7 +308,6 @@ input:focus{
   font-size:13px;
 }
 
-/* Optional smooth fade-in */
 .card,
 .brand,
 .form,
@@ -347,7 +334,6 @@ input:focus{
   }
 }
 
-/* Mobile */
 @media (max-width: 520px){
   .card{
     padding:22px 18px;
@@ -356,11 +342,6 @@ input:focus{
 
   .brand{
     gap:10px;
-  }
-
-  .logo{
-    width:60px;
-    height:60px;
   }
 
   .brand h1{

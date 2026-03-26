@@ -20,10 +20,11 @@ body{
   font-family:Inter,system-ui,sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at top, rgba(255,80,80,0.12), transparent 40%),
+    radial-gradient(circle at top, rgba(59,130,246,0.15), transparent 40%),
     radial-gradient(circle at bottom, rgba(110,168,255,0.08), transparent 50%),
-    linear-gradient(135deg,#0a0202,#140404,#0a0202);
+    linear-gradient(135deg,#020617,#0f172a,#111827);
 }
+
 .page{
   min-height:100vh;
   display:flex;
@@ -53,12 +54,6 @@ body{
   display:flex;
   gap:14px;
   align-items:center;
-}
-
-.logo{
-  width:70px;
-  height:70px;
-  background:url("/static/ccit-logo.png") center/contain no-repeat;
 }
 
 .brand h1{
@@ -133,7 +128,7 @@ label{
 }
 
 .room-active{
-  background:linear-gradient(135deg,#b33d52,#e15b5b);
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
   border-color:transparent;
 }
 
@@ -163,7 +158,6 @@ input:focus{
   background:rgba(255,255,255,0.14);
 }
 
-/* custom dropdown */
 .custom-select{
   position:relative;
   width:100%;
@@ -241,7 +235,7 @@ input:focus{
 }
 
 .custom-option.selected{
-  background:linear-gradient(135deg,#b33d52,#e15b5b);
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
 }
 
 .hidden-select{
@@ -253,7 +247,7 @@ input:focus{
   padding:15px;
   border:none;
   border-radius:16px;
-  background:linear-gradient(135deg,#b33d52,#e15b5b);
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
   color:white;
   font-weight:800;
   cursor:pointer;
@@ -313,7 +307,6 @@ td{
 
 <div class="brand">
   <div class="brand-left">
-    <div class="logo"></div>
     <div>
       <h1>STUDENT DASHBOARD</h1>
       <p>Welcome {{ session.fullname }}</p>
@@ -324,7 +317,6 @@ td{
 
 <div class="grid">
 
-  <!-- LEFT -->
   <div class="panel">
     <h2>Report Issue</h2>
 
@@ -370,7 +362,6 @@ td{
     </form>
   </div>
 
-  <!-- RIGHT -->
   <div class="panel">
     <h2>My Issues</h2>
 
