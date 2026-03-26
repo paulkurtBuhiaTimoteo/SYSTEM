@@ -50,7 +50,7 @@ body{
   justify-content:space-between;
   align-items:flex-start;
   gap:18px;
-  margin-bottom:22px;
+  margin-bottom:18px;
   flex-wrap:wrap;
 }
 
@@ -58,15 +58,6 @@ body{
   display:flex;
   gap:14px;
   align-items:center;
-}
-
-.logo{
-  width:72px;
-  height:68px;
-  flex:0 0 auto;
-  border-radius:20px;
-  background:url("/static/ccit-logo.png") center/contain no-repeat;
-  filter:drop-shadow(0 10px 24px rgba(0,0,0,.28));
 }
 
 .brand h1{
@@ -144,27 +135,27 @@ body{
 .stats-grid{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
-  gap:14px;
+  gap:12px;
   margin-bottom:18px;
 }
 
 .stat-card{
   background:rgba(20,10,10,0.94);
   border:1px solid rgba(255,255,255,0.10);
-  border-radius:18px;
-  padding:18px;
+  border-radius:16px;
+  padding:14px 16px;
 }
 
 .stat-label{
-  font-size:12px;
+  font-size:11px;
   color:rgba(255,255,255,0.72);
-  margin-bottom:8px;
+  margin-bottom:6px;
   text-transform:uppercase;
   letter-spacing:.08em;
 }
 
 .stat-value{
-  font-size:28px;
+  font-size:22px;
   font-weight:800;
   line-height:1;
 }
@@ -256,11 +247,6 @@ body{
   color:#ffffff;
 }
 
-.form-grid select option:checked{
-  background:#991b1b;
-  color:#ffffff;
-}
-
 .stock-note{
   font-size:12px;
   color:rgba(255,255,255,0.72);
@@ -271,7 +257,6 @@ body{
   padding:14px 18px;
   border:none;
   border-radius:14px;
-  background:linear-gradient(135deg,#c62828,#8f1717);
   color:#fff;
   cursor:pointer;
   font-weight:700;
@@ -282,7 +267,19 @@ body{
 
 .mini-btn:hover{
   transform:translateY(-1px);
-  filter:brightness(1.05);
+  filter:brightness(1.08);
+}
+
+.btn-green{
+  background:linear-gradient(135deg,#22c55e,#15803d) !important;
+}
+
+.btn-blue{
+  background:linear-gradient(135deg,#60a5fa,#2563eb) !important;
+}
+
+.btn-red{
+  background:linear-gradient(135deg,#ef4444,#b91c1c) !important;
 }
 
 .small-note{
@@ -345,11 +342,10 @@ body{
 }
 
 .filter-btn.active{
-  background:linear-gradient(135deg,#60a5fa,#3b82f6); /* light blue */
+  background:linear-gradient(135deg,#60a5fa,#3b82f6);
   border-color:rgba(96,165,250,0.5);
   color:#fff;
 }
-
 
 .inventory-wrap{
   background:rgba(12,8,8,0.95);
@@ -403,12 +399,12 @@ body{
 }
 
 .borrowed-pill{
-  background:#dc2626;
+  background:#2563eb;
   color:#fff;
 }
 
 .returned-pill{
-  background:#2563eb;
+  background:#16a34a;
   color:#fff;
 }
 
@@ -479,13 +475,13 @@ body{
 <main class="page">
 <section class="card">
 
-<div class="brand-left">
-  <div class="logo"></div>
-  <div>
-    <h1>BORROWING</h1>
-    <p>Record borrowed equipment by students</p>
+<div class="brand">
+  <div class="brand-left">
+    <div>
+      <h1>BORROWING</h1>
+      <p>Record borrowed equipment by students</p>
+    </div>
   </div>
-</div>
 
   <div class="top-nav">
     <a class="nav-btn" href="/admin/inventory">Inventory</a>
@@ -582,7 +578,7 @@ body{
       </div>
 
       <div class="field-full">
-        <button class="mini-btn" type="submit" style="width:100%;">Save Borrowing Record</button>
+        <button class="mini-btn btn-green" type="submit" style="width:100%;">Save Borrowing Record</button>
       </div>
     </form>
 
@@ -648,7 +644,7 @@ body{
             <td>
               {% if b.status != 'Returned' %}
               <form method="POST" action="/admin/borrowing/return/{{ b.id }}">
-                <button class="mini-btn" style="padding:8px 12px;">Return</button>
+                <button class="mini-btn btn-blue" style="padding:8px 12px;">Return</button>
               </form>
               {% else %}
               -
