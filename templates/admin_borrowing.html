@@ -543,6 +543,14 @@ body{
         <div id="stockNote" class="stock-note hidden"></div>
       </div>
 
+      <div class="field-full hidden" id="itemNumberWrap">
+        <label>Item Number (Optional)</label>
+        <select name="item_number" id="item_number">
+          <option value="">No number selected</option>
+        </select>
+        <div id="numberNote" class="stock-note hidden"></div>
+      </div>
+
       <div>
         <label>Date Borrowed</label>
         <input type="text" value="{{ now_text }}" readonly>
@@ -622,6 +630,9 @@ body{
           <tr class="{% if b.status == 'Overdue' %}overdue-row{% endif %}" data-status="{{ b.status }}">
             <td>
               {{ b.equipment_name }}
+              {% if b.item_number %}
+                <div class="item-sub">Number: {{ b.item_number }}</div>
+              {% endif %}
               {% if b.item_title %}
                 <div class="item-sub">{{ b.item_title }}</div>
               {% endif %}
@@ -676,6 +687,9 @@ function updateItemOptions() {
   const itemTitle = document.getElementById("item_title");
   const stockNote = document.getElementById("stockNote");
   const equipmentIdInput = document.getElementById("equipment_id");
+  const itemNumberWrap = document.getElementById("itemNumberWrap");
+  const itemNumberSelect = document.getElementById("item_number");
+  const numberNote = document.getElementById("numberNote");
 
   itemSelect.innerHTML = '<option value="" disabled selected>Select item</option>';
   itemTitleWrap.classList.add("hidden");
@@ -684,6 +698,10 @@ function updateItemOptions() {
   equipmentIdInput.value = "";
   stockNote.classList.add("hidden");
   stockNote.textContent = "";
+  itemNumberWrap.classList.add("hidden");
+  itemNumberSelect.innerHTML = '<option value="">No number selected</option>';
+  numberNote.classList.add("hidden");
+  numberNote.textContent = "";
 
   if (!category) return;
 
@@ -702,7 +720,9 @@ function updateItemOptions() {
     option.textContent = `${item.name} (Available: ${item.available_qty})`;
     option.dataset.equipmentId = item.id;
     option.dataset.availableQty = item.available_qty;
+    option.dataset.totalQty = item.total_qty;
     option.dataset.category = item.category;
+    option.dataset.borrowedNumbers = JSON.stringify(item.borrowed_numbers || []);
 
     if (item.available_qty <= 0) {
       option.disabled = true;
@@ -721,12 +741,19 @@ function toggleItemDetails() {
   const itemTitle = document.getElementById("item_title");
   const stockNote = document.getElementById("stockNote");
   const equipmentIdInput = document.getElementById("equipment_id");
+  const itemNumberWrap = document.getElementById("itemNumberWrap");
+  const itemNumberSelect = document.getElementById("item_number");
+  const numberNote = document.getElementById("numberNote");
 
   itemTitleWrap.classList.add("hidden");
   itemTitle.required = false;
   stockNote.classList.add("hidden");
   stockNote.textContent = "";
   equipmentIdInput.value = "";
+  itemNumberWrap.classList.add("hidden");
+  itemNumberSelect.innerHTML = '<option value="">No number selected</option>';
+  numberNote.classList.add("hidden");
+  numberNote.textContent = "";
 
   if (!selectedOption || !selectedOption.dataset.equipmentId) {
     return;
@@ -735,6 +762,30 @@ function toggleItemDetails() {
   equipmentIdInput.value = selectedOption.dataset.equipmentId;
   stockNote.textContent = `Available stock: ${selectedOption.dataset.availableQty}`;
   stockNote.classList.remove("hidden");
+
+  const totalQty = parseInt(selectedOption.dataset.totalQty || "0");
+  const borrowedNumbers = JSON.parse(selectedOption.dataset.borrowedNumbers || "[]");
+
+  if (totalQty > 0) {
+    for (let i = 1; i <= totalQty; i++) {
+      if (!borrowedNumbers.includes(i)) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        itemNumberSelect.appendChild(option);
+      }
+    }
+
+    itemNumberWrap.classList.remove("hidden");
+
+    const availableNumberCount = itemNumberSelect.options.length - 1;
+    if (availableNumberCount > 0) {
+      numberNote.textContent = `Optional item number: choose from 1 to ${totalQty}`;
+    } else {
+      numberNote.textContent = "No available item numbers left for this item.";
+    }
+    numberNote.classList.remove("hidden");
+  }
 
   if (category === "Printed Materials") {
     itemTitleWrap.classList.remove("hidden");

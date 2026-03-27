@@ -17,6 +17,13 @@ def get_db():
     return conn
 
 
+def ensure_column_exists(conn, table_name, column_name, column_definition):
+    columns = conn.execute(f"PRAGMA table_info({table_name})").fetchall()
+    existing_column_names = [col["name"] for col in columns]
+    if column_name not in existing_column_names:
+        conn.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_definition}")
+
+
 def init_db():
     conn = get_db()
     cur = conn.cursor()
@@ -88,10 +95,13 @@ def init_db():
             item_category TEXT DEFAULT 'Equipment',
             borrow_limit_days INTEGER DEFAULT 3,
             item_title TEXT DEFAULT '',
+            item_number INTEGER,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (equipment_id) REFERENCES equipment(id)
         )
     """)
+
+    ensure_column_exists(conn, "borrow_logs", "item_number", "item_number INTEGER")
 
     default_rooms = ["ML", "PL", "308"]
     for room_name in default_rooms:
@@ -634,6 +644,20 @@ def admin_borrowing():
         ORDER BY category, name
     """).fetchall()
 
+    borrowed_number_rows = conn.execute("""
+        SELECT equipment_id, item_number
+        FROM borrow_logs
+        WHERE status != 'Returned' AND item_number IS NOT NULL
+    """).fetchall()
+
+    borrowed_numbers_map = {}
+    for row in borrowed_number_rows:
+        equipment_id = row["equipment_id"]
+        item_number = row["item_number"]
+        if equipment_id not in borrowed_numbers_map:
+            borrowed_numbers_map[equipment_id] = []
+        borrowed_numbers_map[equipment_id].append(item_number)
+
     categories = get_all_categories(conn)
 
     total_items, total_stock, available_stock, borrowed_stock, returned, overdue = get_inventory_counts(conn)
@@ -645,7 +669,8 @@ def admin_borrowing():
             "name": row["name"],
             "category": row["category"],
             "total_qty": row["total_qty"],
-            "available_qty": row["available_qty"]
+            "available_qty": row["available_qty"],
+            "borrowed_numbers": borrowed_numbers_map.get(row["id"], [])
         }
         for row in equipment_items
     ])
@@ -676,6 +701,7 @@ def admin_add_borrowing():
     equipment_id_raw = request.form.get("equipment_id", "").strip()
     item_title = request.form.get("item_title", "").strip()
     borrow_limit_days_raw = request.form.get("borrow_limit_days", "").strip()
+    item_number_raw = request.form.get("item_number", "").strip()
 
     try:
         equipment_id = int(equipment_id_raw)
@@ -689,6 +715,13 @@ def admin_add_borrowing():
 
     if borrow_limit_days not in [1, 2, 3, 5, 7, 14]:
         borrow_limit_days = 3
+
+    item_number = None
+    if item_number_raw:
+        try:
+            item_number = int(item_number_raw)
+        except ValueError:
+            item_number = None
 
     if not selected_category or not borrower_student_id or not borrower_name or equipment_id <= 0:
         flash("Please complete all borrowing fields.", "error")
@@ -721,6 +754,29 @@ def admin_add_borrowing():
         flash("Please enter the title/name for printed materials.", "error")
         return redirect(url_for("admin_borrowing"))
 
+    if item_number is not None:
+        if item_number < 1 or item_number > eq["total_qty"]:
+            conn.close()
+            flash("Selected item number is invalid.", "error")
+            return redirect(url_for("admin_borrowing"))
+
+        number_in_use = conn.execute(
+            """
+            SELECT id
+            FROM borrow_logs
+            WHERE equipment_id = ?
+              AND item_number = ?
+              AND status != 'Returned'
+            LIMIT 1
+            """,
+            (eq["id"], item_number)
+        ).fetchone()
+
+        if number_in_use:
+            conn.close()
+            flash("Selected item number is already borrowed.", "error")
+            return redirect(url_for("admin_borrowing"))
+
     now = datetime.now()
     borrow_date = now.strftime("%Y-%m-%d %I:%M %p")
     due_date = (now + timedelta(days=borrow_limit_days)).date().isoformat()
@@ -737,9 +793,10 @@ def admin_add_borrowing():
             admin_username,
             item_category,
             borrow_limit_days,
-            item_title
+            item_title,
+            item_number
         )
-        VALUES (?, ?, ?, ?, ?, 'Borrowed', ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, 'Borrowed', ?, ?, ?, ?, ?)
         """,
         (
             eq["id"],
@@ -750,7 +807,8 @@ def admin_add_borrowing():
             session.get("admin_username", ""),
             eq["category"],
             borrow_limit_days,
-            item_title
+            item_title,
+            item_number
         )
     )
 
@@ -803,6 +861,11 @@ def admin_return_equipment(borrow_id):
 
 if not os.path.exists(DB_NAME):
     init_db()
+else:
+    conn = get_db()
+    ensure_column_exists(conn, "borrow_logs", "item_number", "item_number INTEGER")
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
